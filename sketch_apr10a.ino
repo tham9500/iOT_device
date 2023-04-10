@@ -71,7 +71,7 @@ void water_flow(){
   else{
     float Hz = 1/(2*pulse*pow(10,-6));
     float flow = 7.2725*(float)Hz + 3.2094;
-    float PSI = 0.5*(flow*flow*1)/1000;
+    float PSI = 0.5*(flow/60*flow/60)/100;
     Serial.print(Hz);
     Serial.print("Hz\t");
     Serial.print(flow/60);
