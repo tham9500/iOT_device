@@ -1,13 +1,15 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <PZEM004Tv30.h>
+#include "UUID.h"
 
-// Data wire is plugged into digital pin 2 on the Arduino
-#define ONE_WIRE_BUS 2
-#define flow_sensor 3
-#define LED_G 13
-#define LED_R 12 
-PZEM004Tv30 pzem(4, 5);
+
+#define ONE_WIRE_BUS 2 //Define Pin 2 Data tempsensor 
+#define flow_sensor 3 //Define Pin 3 Data water flow
+#define LED_G 13 //Define Pin 13 Status Water have flow
+#define LED_R 12  //Define Pin 12 Status Water Stop flow
+PZEM004Tv30 pzem(4, 5); //Define TK RK input Code data Pzem Power meter
+UUID uuid;
 
 // Setup a oneWire instance to communicate with any OneWire device
 OneWire oneWire(ONE_WIRE_BUS);
@@ -35,12 +37,8 @@ void setup(void) {
 }
 
 void loop(void) {
-  
-  // Send command to all the sensors for temperature conversion
-  
- 
-
-  
+  Serial.print("UUID: ");
+  Serial.println(uuid);
   water_flow();
   Serial.println("");
   temp_get();
@@ -73,10 +71,14 @@ void water_flow(){
   else{
     float Hz = 1/(2*pulse*pow(10,-6));
     float flow = 7.2725*(float)Hz + 3.2094;
+    float PSI = 0.5*(flow*flow*1)/1000;
     Serial.print(Hz);
     Serial.print("Hz\t");
     Serial.print(flow/60);
     Serial.println(" L/minute");
+    Serial.println(" ");
+    Serial.print(PSI);
+    Serial.println(" PSI");
     digitalWrite(LED_R, LOW);
     digitalWrite(LED_G, HIGH);
   }
