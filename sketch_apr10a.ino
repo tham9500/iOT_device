@@ -35,10 +35,36 @@ void setup(void) {
 }
 
 void loop(void) {
-  float voltage = pzem.voltage();
+  
   // Send command to all the sensors for temperature conversion
+  
+ 
+
+  
+  water_flow();
+  Serial.println("");
+  temp_get();
+  Serial.println("");
+  pzem_get();
+  Serial.println("");
+  delay(1000);
+}
+
+void temp_get(){
   sensors.requestTemperatures();
-  uint32_t pulse = pulseIn(flow_sensor,HIGH);
+  // Display temperature from each sensor
+  for (int i = 0; i < deviceCount; i++) {
+    Serial.print("Sensor ");
+    Serial.print(i + 1);
+    Serial.print(" : ");
+    tempC = sensors.getTempCByIndex(i);
+    Serial.print(tempC);
+    Serial.print(" ํC | ");
+  }
+}
+
+void water_flow(){
+   uint32_t pulse = pulseIn(flow_sensor,HIGH);
   if(pulse < 1){
     digitalWrite(LED_R, HIGH);
     digitalWrite(LED_G, LOW);
@@ -54,19 +80,50 @@ void loop(void) {
     digitalWrite(LED_R, LOW);
     digitalWrite(LED_G, HIGH);
   }
+}
 
-  
+void pzem_get(){
+  float voltage = pzem.voltage();
+    if(voltage != NAN){
+        Serial.print("Voltage: "); Serial.print(voltage); Serial.println("V");
+    } else {
+        Serial.println("Error reading voltage");
+    }
 
-  // Display temperature from each sensor
-  for (int i = 0; i < deviceCount; i++) {
-    Serial.print("Sensor ");
-    Serial.print(i + 1);
-    Serial.print(" : ");
-    tempC = sensors.getTempCByIndex(i);
-    Serial.print(tempC);
-    Serial.print(" ํC | ");
-  }
+    float current = pzem.current();
+    if(current != NAN){
+        Serial.print("Current: "); Serial.print(current); Serial.println("A");
+    } else {
+        Serial.println("Error reading current");
+    }
 
-  Serial.println("");
-  delay(500);
+    float power = pzem.power();
+    if(current != NAN){
+        Serial.print("Power: "); Serial.print(power); Serial.println("W");
+    } else {
+        Serial.println("Error reading power");
+    }
+
+    float energy = pzem.energy();
+    if(current != NAN){
+        Serial.print("Energy: "); Serial.print(energy,3); Serial.println("kWh");
+    } else {
+        Serial.println("Error reading energy");
+    }
+
+    float frequency = pzem.frequency();
+    if(current != NAN){
+        Serial.print("Frequency: "); Serial.print(frequency, 1); Serial.println("Hz");
+    } else {
+        Serial.println("Error reading frequency");
+    }
+
+    float pf = pzem.pf();
+    if(current != NAN){
+        Serial.print("PF: "); Serial.println(pf);
+    } else {
+        Serial.println("Error reading power factor");
+    }
+
+    Serial.println();
 }
