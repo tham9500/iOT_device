@@ -53,8 +53,7 @@ void setup(void)
 
 void loop(void)
 {
-  data_req.clear();
-  JsonObject doc = data_req.createNestedObject();
+
   Serial.print("UUID: ");
   Serial.print(uuid);
   water_flow();
@@ -62,7 +61,17 @@ void loop(void)
   temp_get();
   Serial.println("");
   pzem_get();
+  request_data();
   Serial.println("");
+  Serial.println("");
+  // delay(36000);
+  delay(1000);
+}
+
+void request_data()
+{
+  data_req.clear();
+  JsonObject doc = data_req.createNestedObject();
   doc["uuid"] = uuid;
   doc["sensor1"] = tempsensor1;
   doc["sensor2"] = tempsensor2;
@@ -70,15 +79,13 @@ void loop(void)
   doc["sensor4"] = tempsensor4;
   doc["sensor5"] = tempsensor5;
   doc["voltage"] = volt == " NAN" ? "0" : volt;
-  doc["current"] = amp== " NAN" ? "0" : amp;
+  doc["current"] = amp == " NAN" ? "0" : amp;
   doc["power"] = watt == " NAN" ? "0" : watt;
   doc["energy"] = ener == " NAN" ? "0" : ener;
   doc["frequency"] = frequen == " NAN" ? "0" : frequen;
   doc["pf"] = powerfactor == " NAN" ? "0" : powerfactor;
   doc["water"] = water;
   serializeJson(data_req, Serial);
-  Serial.println("");
-  delay(36000);
 }
 
 void temp_get()
@@ -92,7 +99,7 @@ void temp_get()
     Serial.print(" : ");
     tempC = sensors.getTempCByIndex(i);
     Serial.print(tempC);
-    Serial.print(" ํC | ");
+    Serial.print(" C | ");
     if (i == 0)
     {
       tempsensor1 = tempC;
@@ -123,7 +130,7 @@ void water_flow()
   {
     digitalWrite(LED_R, HIGH);
     digitalWrite(LED_G, LOW);
-    water ="0";
+    water = "0";
   }
 
   else
@@ -223,5 +230,5 @@ void pzem_get()
     Serial.println("Error reading power factor");
   }
 
-  Serial.println();
+  // Serial.println();
 }
