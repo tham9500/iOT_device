@@ -33,12 +33,11 @@ void setup(void) {
   deviceCount = sensors.getDeviceCount();
   Serial.print(deviceCount, DEC);
   Serial.println(" devices.");
-  Serial.println("");
 }
 
 void loop(void) {
   Serial.print("UUID: ");
-  Serial.println(uuid);
+  Serial.print(uuid);
   water_flow();
   Serial.println("");
   temp_get();
