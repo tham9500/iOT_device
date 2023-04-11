@@ -2,5 +2,5 @@
     "port": "/dev/tty.usbserial-10",
     "board": "arduino:avr:uno",
     "programmer": "usbasp",
-    "sketch": "sketch_apr10a.ino"
+    "sketch": "sketch_apr10a/sketch_apr10a.ino"
 }
